@@ -9,7 +9,7 @@ import android.opengl.GLException;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
 
-import com.ywl5320.listener.WlOnGlSurfaceViewOncreateListener;
+import com.ywl5320.listener.WlOnGlSurfaceViewOnCreateListener;
 import com.ywl5320.listener.WlOnRenderRefreshListener;
 import com.ywl5320.util.MyLog;
 import com.ywl5320.wlplayer.R;
@@ -92,7 +92,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
 
 
 
-    private WlOnGlSurfaceViewOncreateListener wlOnGlSurfaceViewOncreateListener;
+    private WlOnGlSurfaceViewOnCreateListener wlOnGlSurfaceViewOncreateListener;
     private WlOnRenderRefreshListener wlOnRenderRefreshListener;
 
     public WlGlRender(Context context) {
@@ -183,7 +183,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         }
     }
 
-    public void setWlOnGlSurfaceViewOncreateListener(WlOnGlSurfaceViewOncreateListener wlOnGlSurfaceViewOncreateListener) {
+    public void setWlOnGlSurfaceViewOncreateListener(WlOnGlSurfaceViewOnCreateListener wlOnGlSurfaceViewOncreateListener) {
         this.wlOnGlSurfaceViewOncreateListener = wlOnGlSurfaceViewOncreateListener;
     }
 
@@ -219,7 +219,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         surface = new Surface(surfaceTexture);
         if(wlOnGlSurfaceViewOncreateListener != null)
         {
-            wlOnGlSurfaceViewOncreateListener.onGlSurfaceViewOncreate(surface);
+            wlOnGlSurfaceViewOncreateListener.onGlSurfaceViewOnCreate(surface);
         }
     }
 

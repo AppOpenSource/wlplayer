@@ -4,7 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import com.ywl5320.listener.WlOnGlSurfaceViewOncreateListener;
+import com.ywl5320.listener.WlOnGlSurfaceViewOnCreateListener;
 import com.ywl5320.listener.WlOnRenderRefreshListener;
 
 /**
@@ -14,7 +14,7 @@ import com.ywl5320.listener.WlOnRenderRefreshListener;
 public class WlGlSurfaceView extends GLSurfaceView{
 
     private WlGlRender wlGlRender;
-    private WlOnGlSurfaceViewOncreateListener onGlSurfaceViewOncreateListener;
+    private WlOnGlSurfaceViewOnCreateListener onGlSurfaceViewOncreateListener;
 
     public WlGlSurfaceView(Context context) {
         this(context, null);
@@ -37,7 +37,7 @@ public class WlGlSurfaceView extends GLSurfaceView{
         });
     }
 
-    public void setOnGlSurfaceViewOncreateListener(WlOnGlSurfaceViewOncreateListener onGlSurfaceViewOncreateListener) {
+    public void setOnGlSurfaceViewOncreateListener(WlOnGlSurfaceViewOnCreateListener onGlSurfaceViewOncreateListener) {
         if(wlGlRender != null)
         {
             wlGlRender.setWlOnGlSurfaceViewOncreateListener(onGlSurfaceViewOncreateListener);
