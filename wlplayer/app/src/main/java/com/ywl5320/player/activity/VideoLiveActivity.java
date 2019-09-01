@@ -7,7 +7,6 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -52,40 +51,26 @@ public class VideoLiveActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
-        surfaceview = findViewById(R.id.surfaceview);
-        progressBar = findViewById(R.id.pb_loading);
-        ivPause = findViewById(R.id.iv_pause);
-        tvTime = findViewById(R.id.tv_time);
-        seekBar = findViewById(R.id.seekbar);
-        lyAction = findViewById(R.id.ly_action);
-        ivCutImg = findViewById(R.id.iv_cutimg);
-        ivShowImg = findViewById(R.id.iv_show_img);
+        initViews();
+        initPlayer();
+    }
 
+    private void initPlayer() {
         wlPlayer = new WlPlayer();
         wlPlayer.setOnlyMusic(false);
 
         pathurl = getIntent().getExtras().getString("url");
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                position = wlPlayer.getDuration() * progress / 100;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                isSeek = true;
-                wlPlayer.seek(position);
-            }
-        });
+        setupSeekBar();
         wlPlayer.setDataSource(pathurl);
         wlPlayer.setOnlySoft(false);
         wlPlayer.setWlGlSurfaceView(surfaceview);
+        setupPlayerListener();
+
+        wlPlayer.prepared();
+    }
+
+    private void setupPlayerListener() {
         wlPlayer.setWlOnErrorListener(new WlOnErrorListener() {
             @Override
             public void onError(int code, String msg) {
@@ -122,7 +107,7 @@ public class VideoLiveActivity extends BaseActivity {
                 Message message = Message.obtain();
                 message.what = 2;
                 message.obj = wlTimeBean;
-                MyLog.d("nowTime is " +wlTimeBean.getCurrt_secds());
+                MyLog.d("nowTime is " + wlTimeBean.getCurrt_secds());
                 handler.sendMessage(message);
             }
         });
@@ -144,67 +129,77 @@ public class VideoLiveActivity extends BaseActivity {
                 handler.sendMessage(message);
             }
         });
+    }
 
-        wlPlayer.prepared();
+    private void setupSeekBar() {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                position = wlPlayer.getDuration() * progress / 100;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                isSeek = true;
+                wlPlayer.seek(position);
+            }
+        });
+    }
+
+    private void initViews() {
+        surfaceview = findViewById(R.id.surfaceview);
+        progressBar = findViewById(R.id.pb_loading);
+        ivPause = findViewById(R.id.iv_pause);
+        tvTime = findViewById(R.id.tv_time);
+        seekBar = findViewById(R.id.seekbar);
+        lyAction = findViewById(R.id.ly_action);
+        ivCutImg = findViewById(R.id.iv_cutimg);
+        ivShowImg = findViewById(R.id.iv_show_img);
     }
 
 
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 1)
-            {
+            if (msg.what == 1) {
                 boolean load = (boolean) msg.obj;
-                if(load)
-                {
+                if (load) {
                     progressBar.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    if(lyAction.getVisibility() != View.VISIBLE)
-                    {
+                } else {
+                    if (lyAction.getVisibility() != View.VISIBLE) {
                         lyAction.setVisibility(View.VISIBLE);
                         ivCutImg.setVisibility(View.VISIBLE);
                     }
                     progressBar.setVisibility(View.GONE);
                 }
-            }
-            else if(msg.what == 2)
-            {
+            } else if (msg.what == 2) {
                 WlTimeBean wlTimeBean = (WlTimeBean) msg.obj;
-                if(wlTimeBean.getTotal_secds() > 0)
-                {
+                if (wlTimeBean.getTotal_secds() > 0) {
                     seekBar.setVisibility(View.VISIBLE);
-                    if(isSeek)
-                    {
+                    if (isSeek) {
                         seekBar.setProgress(position * 100 / wlTimeBean.getTotal_secds());
                         isSeek = false;
-                    }
-                    else
-                    {
+                    } else {
                         seekBar.setProgress(wlTimeBean.getCurrt_secds() * 100 / wlTimeBean.getTotal_secds());
                     }
                     tvTime.setText(WlTimeUtil.secdsToDateFormat(wlTimeBean.getTotal_secds()) + "/" + WlTimeUtil.secdsToDateFormat(wlTimeBean.getCurrt_secds()));
-                }
-                else
-                {
+                } else {
                     seekBar.setVisibility(View.GONE);
                     tvTime.setText(WlTimeUtil.secdsToDateFormat(wlTimeBean.getCurrt_secds()));
                 }
-            }
-            else if(msg.what == 3)
-            {
+            } else if (msg.what == 3) {
                 String err = (String) msg.obj;
                 Toast.makeText(VideoLiveActivity.this, err, Toast.LENGTH_SHORT).show();
-            }
-            else if(msg.what == 4)
-            {
+            } else if (msg.what == 4) {
                 Bitmap bitmap = (Bitmap) msg.obj;
-                if(bitmap != null)
-                {
+                if (bitmap != null) {
                     ivShowImg.setVisibility(View.VISIBLE);
                     ivShowImg.setImageBitmap(bitmap);
                 }
@@ -214,24 +209,19 @@ public class VideoLiveActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(wlPlayer != null)
-        {
+        if (wlPlayer != null) {
             wlPlayer.stop(true);
         }
         this.finish();
     }
 
     public void pause(View view) {
-        if(wlPlayer != null)
-        {
+        if (wlPlayer != null) {
             ispause = !ispause;
-            if(ispause)
-            {
+            if (ispause) {
                 wlPlayer.pause();
                 ivPause.setImageResource(R.mipmap.ic_play_play);
-            }
-            else
-            {
+            } else {
                 wlPlayer.resume();
                 ivPause.setImageResource(R.mipmap.ic_play_pause);
             }
@@ -240,8 +230,7 @@ public class VideoLiveActivity extends BaseActivity {
     }
 
     public void cutImg(View view) {
-        if(wlPlayer != null)
-        {
+        if (wlPlayer != null) {
             wlPlayer.cutVideoImg();
         }
     }

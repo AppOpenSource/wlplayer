@@ -1,24 +1,18 @@
 package com.ywl5320.player.base;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +23,11 @@ import com.ywl5320.player.util.CommonUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
 /**
  * Created by ywl on 2017/2/5.
  */
 
-public abstract class BaseActivity extends AppCompatActivity{
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     @BindView(R.id.ly_system_parent)
@@ -89,11 +82,10 @@ public abstract class BaseActivity extends AppCompatActivity{
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
         lySystemBar = (LinearLayout) findViewById(R.id.ly_system_bar);
-        if(lySystemBar != null) {
+        if (lySystemBar != null) {
             initSystembar(lySystemBar);
         }
-        if(mivBack != null)
-        {
+        if (mivBack != null) {
             mivBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -101,8 +93,7 @@ public abstract class BaseActivity extends AppCompatActivity{
                 }
             });
         }
-        if(mivRight != null)
-        {
+        if (mivRight != null) {
             mivRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,8 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity{
             });
         }
 
-        if(tvRight != null)
-        {
+        if (tvRight != null) {
             tvRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -123,32 +113,29 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     }
 
-    public void setTitleTrans(int color)
-    {
-        if(lySystemParent != null)
-        {
+    public void setTitleTrans(int color) {
+        if (lySystemParent != null) {
             lySystemParent.setBackgroundColor(getResources().getColor(color));
         }
     }
 
-    public void setTitleLine(int color)
-    {
-        if(ivLine != null)
-        {
+    public void setTitleLine(int color) {
+        if (ivLine != null) {
             ivLine.setBackgroundColor(getResources().getColor(color));
         }
     }
 
-    public void onClickMenu(){}
+    public void onClickMenu() {
+    }
 
-    public void onClickBack(){}
+    public void onClickBack() {
+    }
 
-    public void onClickTxtMenu(){}
+    public void onClickTxtMenu() {
+    }
 
 
-
-    public void initSystembar(View lySystemBar)
-    {
+    public void initSystembar(View lySystemBar) {
         if (Build.VERSION.SDK_INT >= 19) {
             if (lySystemBar != null) {
                 lySystemBar.setVisibility(View.VISIBLE);
@@ -166,12 +153,11 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     /**
      * 设置标题
+     *
      * @param title
      */
-    public void setTitle(String title)
-    {
-        if(mtvTitle != null)
-        {
+    public void setTitle(String title) {
+        if (mtvTitle != null) {
             mtvTitle.setText(title);
         }
     }
@@ -179,10 +165,8 @@ public abstract class BaseActivity extends AppCompatActivity{
     /**
      * 显示返回图标
      */
-    public void setBackView()
-    {
-        if(mivBack != null)
-        {
+    public void setBackView() {
+        if (mivBack != null) {
             mivBack.setVisibility(View.VISIBLE);
         }
     }
@@ -190,10 +174,8 @@ public abstract class BaseActivity extends AppCompatActivity{
     /**
      * 显示返回图标
      */
-    public void setBackView(int resId)
-    {
-        if(mivBack != null)
-        {
+    public void setBackView(int resId) {
+        if (mivBack != null) {
             mivBack.setVisibility(View.VISIBLE);
             mivBack.setImageResource(resId);
         }
@@ -202,19 +184,15 @@ public abstract class BaseActivity extends AppCompatActivity{
     /**
      * 显示返回图标
      */
-    public void setRightView(int resId)
-    {
-        if(mivRight != null)
-        {
+    public void setRightView(int resId) {
+        if (mivRight != null) {
             mivRight.setVisibility(View.VISIBLE);
             mivRight.setImageResource(resId);
         }
     }
 
-    public void setRightTxtMenu(String menu)
-    {
-        if(tvRight != null)
-        {
+    public void setRightTxtMenu(String menu) {
+        if (tvRight != null) {
             tvRight.setVisibility(View.VISIBLE);
             tvRight.setText(menu);
         }
@@ -224,25 +202,23 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
     }
-    public void showToast(String msg)
-    {
+
+    public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static void startActivity(Context context, Class clz)
-    {
+    public static void startActivity(Context context, Class clz) {
         Intent intent = new Intent(context, clz);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        ((Activity) context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 
     }
 
-    public static void startActivity(Context context, Class clz, Bundle bundle)
-    {
+    public static void startActivity(Context context, Class clz, Bundle bundle) {
         Intent intent = new Intent(context, clz);
         intent.putExtras(bundle);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        ((Activity) context).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 
     }
 
@@ -256,20 +232,16 @@ public abstract class BaseActivity extends AppCompatActivity{
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 
-    public void showLoadDialog(String msg)
-    {
-        if(loadingDialog == null)
-        {
+    public void showLoadDialog(String msg) {
+        if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(this);
         }
         loadingDialog.show();
         loadingDialog.setMsg(msg);
     }
 
-    public void hideLoadDialog()
-    {
-        if(loadingDialog != null)
-        {
+    public void hideLoadDialog() {
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
     }
