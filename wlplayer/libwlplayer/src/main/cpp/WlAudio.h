@@ -5,7 +5,6 @@
 #ifndef WLPLAYER_WLAUDIO_H
 #define WLPLAYER_WLAUDIO_H
 
-
 #include "WlBasePlayer.h"
 #include "WlQueue.h"
 #include "AndroidLog.h"
@@ -19,8 +18,10 @@ extern "C"
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 };
+
 class WlOpenSLES;
-class WlAudio : public WlBasePlayer{
+
+class WlAudio : public WlBasePlayer {
 
 public:
     WlQueue *queue = NULL;
@@ -65,19 +66,26 @@ public:
     SLAndroidSimpleBufferQueueItf pcmBufferQueue = NULL;
 public:
     WlAudio(WlPlayStatus *playStatus, WlJavaCall *javaCall);
+
     ~WlAudio();
 
     void setVideo(bool video);
 
     void playAudio();
-    int getPcmData(void **pcm);
-    int initOpenSL();
-    void pause();
-    void resume();
-    void realease();
-    int getSLSampleRate();
-    void setClock(int secds);
 
+    int getPcmData(void **pcm);
+
+    int initOpenSL();
+
+    void pause();
+
+    void resume();
+
+    void realease();
+
+    int getSLSampleRate();
+
+    void setClock(int secds);
 
 };
 

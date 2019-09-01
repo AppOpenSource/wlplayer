@@ -37,29 +37,45 @@ public:
     bool isavi = false;
     bool isOnlyMusic = false;
 
-    std::deque<WlAudioChannel*> audiochannels;
-    std::deque<WlAudioChannel*> videochannels;
+    std::deque<WlAudioChannel *> audiochannels;
+    std::deque<WlAudioChannel *> videochannels;
 
     pthread_mutex_t init_mutex;
     pthread_mutex_t seek_mutex;
 
 public:
     WlFFmpeg(WlJavaCall *javaCall, const char *urlpath, bool onlymusic);
+
     ~WlFFmpeg();
+
     int preparedFFmpeg();
+
     int decodeFFmpeg();
+
     int start();
+
     int seek(int64_t sec);
+
     int getDuration();
-    int getAvCodecContext(AVCodecParameters * parameters, WlBasePlayer *wlBasePlayer);
+
+    int getAvCodecContext(AVCodecParameters *parameters, WlBasePlayer *wlBasePlayer);
+
     void release();
+
     void pause();
+
     void resume();
-    int getMimeType(const char* codecName);
+
+    int getMimeType(const char *codecName);
+
     void setAudioChannel(int id);
+
     void setVideoChannel(int id);
+
     int getAudioChannels();
+
     int getVideoWidth();
+
     int getVideoHeight();
 };
 

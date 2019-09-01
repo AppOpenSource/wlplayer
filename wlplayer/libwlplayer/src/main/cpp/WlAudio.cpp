@@ -1,7 +1,6 @@
 //
 // Created by ywl on 2017-12-3.
 //
-
 #include "WlAudio.h"
 
 WlAudio::WlAudio(WlPlayStatus *playStatus, WlJavaCall *javaCall) {
@@ -14,45 +13,37 @@ WlAudio::WlAudio(WlPlayStatus *playStatus, WlJavaCall *javaCall) {
 }
 
 WlAudio::~WlAudio() {
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("~WlAudio() 释放完了");
     }
 
 }
 
 void WlAudio::realease() {
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("开始释放 audio...");
     }
     pause();
-    if(queue != NULL)
-    {
+    if (queue != NULL) {
         queue->noticeThread();
     }
     int count = 0;
-    while(!isExit)
-    {
-        if(LOG_SHOW)
-        {
+    while (!isExit) {
+        if (LOG_SHOW) {
             LOGE("等待缓冲线程结束...%d", count);
         }
-        if(count > 1000)
-        {
+        if (count > 1000) {
             isExit = true;
         }
         count++;
         av_usleep(1000 * 10);
     }
-    if(queue != NULL)
-    {
+    if (queue != NULL) {
         queue->release();
-        delete(queue);
+        delete (queue);
         queue = NULL;
     }
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("释放 opensl es start");
     }
     if (pcmPlayerObject != NULL) {
@@ -64,8 +55,7 @@ void WlAudio::realease() {
         buffer = NULL;
         pcmsize = 0;
     }
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("释放 opensl es end 1");
     }
     // destroy output mix object, and invalidate all associated interfaces
@@ -75,8 +65,7 @@ void WlAudio::realease() {
         outputMixEnvironmentalReverb = NULL;
     }
 
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("释放 opensl es end 2");
     }
 
@@ -86,37 +75,31 @@ void WlAudio::realease() {
         engineObject = NULL;
         engineEngine = NULL;
     }
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("释放 opensl es end");
     }
 
 
-    if(out_buffer != NULL)
-    {
+    if (out_buffer != NULL) {
         free(out_buffer);
         out_buffer = NULL;
     }
-    if(buffer != NULL)
-    {
+    if (buffer != NULL) {
         free(buffer);
         buffer = NULL;
     }
-    if(avCodecContext != NULL)
-    {
+    if (avCodecContext != NULL) {
         avcodec_close(avCodecContext);
         avcodec_free_context(&avCodecContext);
         avCodecContext = NULL;
     }
-    if(wlPlayStatus != NULL)
-    {
+    if (wlPlayStatus != NULL) {
         wlPlayStatus = NULL;
     }
 
 }
 
-void *audioPlayThread(void *context)
-{
+void *audioPlayThread(void *context) {
     WlAudio *audio = (WlAudio *) context;
     audio->initOpenSL();
     pthread_exit(&audio->audioThread);
@@ -127,45 +110,39 @@ void WlAudio::playAudio() {
 }
 
 int WlAudio::getPcmData(void **pcm) {
-    while(!wlPlayStatus->exit) {
+    while (!wlPlayStatus->exit) {
         isExit = false;
 
-        if(wlPlayStatus->pause)//暂停
+        if (wlPlayStatus->pause)//暂停
         {
             av_usleep(1000 * 100);
             continue;
         }
-        if(wlPlayStatus->seek)
-        {
+        if (wlPlayStatus->seek) {
             wljavaCall->onLoad(WL_THREAD_CHILD, true);
             wlPlayStatus->load = true;
             isReadPacketFinish = true;
             continue;
         }
-        if(!isVideo)
-        {
-            if(queue->getAvPacketSize() == 0)//加载
+        if (!isVideo) {
+            if (queue->getAvPacketSize() == 0)//加载
             {
-                if(!wlPlayStatus->load)
-                {
+                if (!wlPlayStatus->load) {
                     wljavaCall->onLoad(WL_THREAD_CHILD, true);
                     wlPlayStatus->load = true;
                 }
                 continue;
-            } else{
-                if(wlPlayStatus->load)
-                {
+            } else {
+                if (wlPlayStatus->load) {
                     wljavaCall->onLoad(WL_THREAD_CHILD, false);
                     wlPlayStatus->load = false;
                 }
             }
         }
-        if(isReadPacketFinish)
-        {
+        if (isReadPacketFinish) {
             isReadPacketFinish = false;
             packet = av_packet_alloc();
-            if(queue->getAvpacket(packet) != 0)
-            {
+            if (queue->getAvpacket(packet) != 0) {
                 av_packet_free(&packet);
                 av_free(packet);
                 packet = NULL;
@@ -183,8 +160,7 @@ int WlAudio::getPcmData(void **pcm) {
         }
 
         AVFrame *frame = av_frame_alloc();
-        if(avcodec_receive_frame(avCodecContext, frame) == 0)
-        {
+        if (avcodec_receive_frame(avCodecContext, frame) == 0) {
             // 设置通道数或channel_layout
             if (frame->channels > 0 && frame->channel_layout == 0)
                 frame->channel_layout = av_get_default_channel_layout(frame->channels);
@@ -221,8 +197,7 @@ int WlAudio::getPcmData(void **pcm) {
             out_channels = av_get_channel_layout_nb_channels(dst_layout);
             data_size = out_channels * nb * av_get_bytes_per_sample(dst_format);
             now_time = frame->pts * av_q2d(time_base);
-            if(now_time < clock)
-            {
+            if (now_time < clock) {
                 now_time = clock;
             }
             clock = now_time;
@@ -232,8 +207,7 @@ int WlAudio::getPcmData(void **pcm) {
             swr_free(&swr_ctx);
             *pcm = out_buffer;
             break;
-        } else
-        {
+        } else {
             isReadPacketFinish = true;
             av_frame_free(&frame);
             av_free(frame);
@@ -248,18 +222,16 @@ int WlAudio::getPcmData(void **pcm) {
     return data_size;
 }
 
-void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void * context)
-{
+void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void *context) {
     WlAudio *wlAudio = (WlAudio *) context;
-    if(wlAudio != NULL) {
-        if(LOG_SHOW)
-        {
+    if (wlAudio != NULL) {
+        if (LOG_SHOW) {
             LOGE("pcm call back...");
         }
         wlAudio->buffer = NULL;
         wlAudio->pcmsize = wlAudio->getPcmData(&wlAudio->buffer);
         if (wlAudio->buffer && wlAudio->pcmsize > 0) {
-            wlAudio->clock += wlAudio->pcmsize / ((double)(wlAudio->sample_rate * 2 * 2));
+            wlAudio->clock += wlAudio->pcmsize / ((double) (wlAudio->sample_rate * 2 * 2));
             wlAudio->wljavaCall->onVideoInfo(WL_THREAD_CHILD, wlAudio->clock, wlAudio->duration);
             (*wlAudio->pcmBufferQueue)->Enqueue(wlAudio->pcmBufferQueue, wlAudio->buffer,
                                                 wlAudio->pcmsize);
@@ -268,8 +240,7 @@ void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void * context)
 }
 
 int WlAudio::initOpenSL() {
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGD("initopensl");
     }
     SLresult result;
@@ -281,23 +252,25 @@ int WlAudio::initOpenSL() {
     const SLInterfaceID mids[1] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean mreq[1] = {SL_BOOLEAN_FALSE};
     result = (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 1, mids, mreq);
-    (void)result;
+    (void) result;
     result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
-    (void)result;
-    result = (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB, &outputMixEnvironmentalReverb);
+    (void) result;
+    result = (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB,
+                                              &outputMixEnvironmentalReverb);
     if (SL_RESULT_SUCCESS == result) {
         result = (*outputMixEnvironmentalReverb)->SetEnvironmentalReverbProperties(
                 outputMixEnvironmentalReverb, &reverbSettings);
-        (void)result;
+        (void) result;
     }
     SLDataLocator_OutputMix outputMix = {SL_DATALOCATOR_OUTPUTMIX, outputMixObject};
     SLDataSink audioSnk = {&outputMix, 0};
 
 
     // 第三步，配置PCM格式信息
-    SLDataLocator_AndroidSimpleBufferQueue android_queue={SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE,2};
+    SLDataLocator_AndroidSimpleBufferQueue android_queue = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE,
+                                                            2};
 
-    SLDataFormat_PCM pcm={
+    SLDataFormat_PCM pcm = {
             SL_DATAFORMAT_PCM,//播放pcm格式的数据
             2,//2个声道（立体声）
             getSLSampleRate(),//44100hz的频率
@@ -312,7 +285,8 @@ int WlAudio::initOpenSL() {
     const SLInterfaceID ids[3] = {SL_IID_BUFFERQUEUE, SL_IID_EFFECTSEND, SL_IID_VOLUME};
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
-    result = (*engineEngine)->CreateAudioPlayer(engineEngine, &pcmPlayerObject, &slDataSource, &audioSnk, 3, ids, req);
+    result = (*engineEngine)->CreateAudioPlayer(engineEngine, &pcmPlayerObject, &slDataSource,
+                                                &audioSnk, 3, ids, req);
     //初始化播放器
     (*pcmPlayerObject)->Realize(pcmPlayerObject, SL_BOOLEAN_FALSE);
 
@@ -329,16 +303,14 @@ int WlAudio::initOpenSL() {
 //    获取播放状态接口
     (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PLAYING);
     pcmBufferCallBack(pcmBufferQueue, this);
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("initopensl 2");
     }
     return 0;
 }
 
 int WlAudio::getSLSampleRate() {
-    switch (sample_rate)
-    {
+    switch (sample_rate) {
         case 8000:
             return SL_SAMPLINGRATE_8;
         case 11025:
@@ -371,16 +343,14 @@ int WlAudio::getSLSampleRate() {
 }
 
 void WlAudio::pause() {
-    if(pcmPlayerPlay != NULL)
-    {
-        (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay,  SL_PLAYSTATE_PAUSED);
+    if (pcmPlayerPlay != NULL) {
+        (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PAUSED);
     }
 
 }
 
 void WlAudio::resume() {
-    if(pcmPlayerPlay != NULL)
-    {
+    if (pcmPlayerPlay != NULL) {
         (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PLAYING);
     }
 }

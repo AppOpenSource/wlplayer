@@ -1,7 +1,6 @@
 //
 // Created by ywl on 2017-12-3.
 //
-
 #include "WlQueue.h"
 #include "AndroidLog.h"
 
@@ -19,24 +18,21 @@ WlQueue::~WlQueue() {
     pthread_cond_destroy(&condPacket);
     pthread_mutex_destroy(&mutexFrame);
     pthread_cond_destroy(&condFrame);
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("~WlQueue() 释放完了");
     }
 
 }
 
 void WlQueue::release() {
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("WlQueue::release");
     }
 
     noticeThread();
     clearAvpacket();
     clearAvFrame();
-    if(LOG_SHOW)
-    {
+    if (LOG_SHOW) {
         LOGE("WlQueue::release success");
     }
 
@@ -56,22 +52,18 @@ int WlQueue::getAvpacket(AVPacket *avPacket) {
 
     pthread_mutex_lock(&mutexPacket);
 
-    while(wlPlayStatus != NULL && !wlPlayStatus->exit)
-    {
-        if(queuePacket.size() > 0)
-        {
+    while (wlPlayStatus != NULL && !wlPlayStatus->exit) {
+        if (queuePacket.size() > 0) {
             AVPacket *pkt = queuePacket.front();
-            if(av_packet_ref(avPacket, pkt) == 0)
-            {
+            if (av_packet_ref(avPacket, pkt) == 0) {
                 queuePacket.pop();
             }
             av_packet_free(&pkt);
             av_free(pkt);
             pkt = NULL;
             break;
-        } else{
-            if(!wlPlayStatus->exit)
-            {
+        } else {
+            if (!wlPlayStatus->exit) {
                 pthread_cond_wait(&condPacket, &mutexPacket);
             }
         }
@@ -84,8 +76,7 @@ int WlQueue::clearAvpacket() {
 
     pthread_cond_signal(&condPacket);
     pthread_mutex_lock(&mutexPacket);
-    while (!queuePacket.empty())
-    {
+    while (!queuePacket.empty()) {
         AVPacket *pkt = queuePacket.front();
         queuePacket.pop();
         av_free(pkt->data);
@@ -116,22 +107,18 @@ int WlQueue::putAvframe(AVFrame *avFrame) {
 int WlQueue::getAvframe(AVFrame *avFrame) {
     pthread_mutex_lock(&mutexFrame);
 
-    while(wlPlayStatus != NULL && !wlPlayStatus->exit)
-    {
-        if(queueFrame.size() > 0)
-        {
+    while (wlPlayStatus != NULL && !wlPlayStatus->exit) {
+        if (queueFrame.size() > 0) {
             AVFrame *frame = queueFrame.front();
-            if(av_frame_ref(avFrame, frame) == 0)
-            {
+            if (av_frame_ref(avFrame, frame) == 0) {
                 queueFrame.pop();
             }
             av_frame_free(&frame);
             av_free(frame);
             frame = NULL;
             break;
-        } else{
-            if(!wlPlayStatus->exit)
-            {
+        } else {
+            if (!wlPlayStatus->exit) {
                 pthread_cond_wait(&condFrame, &mutexFrame);
             }
         }
@@ -143,8 +130,7 @@ int WlQueue::getAvframe(AVFrame *avFrame) {
 int WlQueue::clearAvFrame() {
     pthread_cond_signal(&condFrame);
     pthread_mutex_lock(&mutexFrame);
-    while (!queueFrame.empty())
-    {
+    while (!queueFrame.empty()) {
         AVFrame *frame = queueFrame.front();
         queueFrame.pop();
         av_frame_free(&frame);
@@ -172,17 +158,15 @@ int WlQueue::noticeThread() {
 int WlQueue::clearToKeyFrame() {
     pthread_cond_signal(&condPacket);
     pthread_mutex_lock(&mutexPacket);
-    while (!queuePacket.empty())
-    {
+    while (!queuePacket.empty()) {
         AVPacket *pkt = queuePacket.front();
-        if(pkt->flags != AV_PKT_FLAG_KEY)
-        {
+        if (pkt->flags != AV_PKT_FLAG_KEY) {
             queuePacket.pop();
             av_free(pkt->data);
             av_free(pkt->buf);
             av_free(pkt->side_data);
             pkt = NULL;
-        } else{
+        } else {
             break;
         }
     }
