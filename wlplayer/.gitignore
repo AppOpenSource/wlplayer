@@ -9,3 +9,5 @@
 .externalNativeBuild
 /app/build
 /libwlplayer/build
+.idea
+gradle
