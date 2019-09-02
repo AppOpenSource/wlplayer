@@ -37,15 +37,14 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         return result;
     }
     return JNI_VERSION_1_4;
-}extern "C"
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_ywl5320_wlplayer_WlPlayer_wlStart(JNIEnv *env, jobject instance) {
-
-    // TODO
     if (wlFFmpeg != NULL) {
         wlFFmpeg->start();
     }
-
 }
 
 extern "C"

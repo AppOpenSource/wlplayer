@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include "WlStataus.h"
 
-
 class WlJavaCall {
 
 public:
@@ -28,12 +27,18 @@ public:
 
 public:
     WlJavaCall(_JavaVM *javaVM, JNIEnv *env, jobject *jobj);
+
     ~WlJavaCall();
+
     void onError(int type, int code, const char *msg);
+
     void onLoad(int type, bool load);
+
     void onParpared(int type);
 
-    void onInitMediacodec(int type, int mimetype, int width, int height, int csd_0_size, int csd_1_size, uint8_t * csd_0, uint8_t * csd_1);
+    void
+    onInitMediacodec(int type, int mimetype, int width, int height, int csd_0_size, int csd_1_size,
+                     uint8_t *csd_0, uint8_t *csd_1);
 
     void onDecMediacodec(int type, int size, uint8_t *data, int pts);
 
@@ -48,6 +53,5 @@ public:
     bool isOnlySoft(int type);
 
 };
-
 
 #endif //WLPLAYER_WLLISTENER_H

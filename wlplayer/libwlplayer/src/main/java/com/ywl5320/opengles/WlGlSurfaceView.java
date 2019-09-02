@@ -11,7 +11,7 @@ import com.ywl5320.listener.WlOnRenderRefreshListener;
  * Created by hlwky001 on 2017/12/15.
  */
 
-public class WlGlSurfaceView extends GLSurfaceView{
+public class WlGlSurfaceView extends GLSurfaceView {
 
     private WlGlRender wlGlRender;
     private WlOnGlSurfaceViewOnCreateListener onGlSurfaceViewOncreateListener;
@@ -38,34 +38,26 @@ public class WlGlSurfaceView extends GLSurfaceView{
     }
 
     public void setOnGlSurfaceViewOncreateListener(WlOnGlSurfaceViewOnCreateListener onGlSurfaceViewOncreateListener) {
-        if(wlGlRender != null)
-        {
+        if (wlGlRender != null) {
             wlGlRender.setWlOnGlSurfaceViewOncreateListener(onGlSurfaceViewOncreateListener);
         }
     }
 
-    public void setCodecType(int type)
-    {
-        if(wlGlRender != null)
-        {
+    public void setCodecType(int type) {
+        if (wlGlRender != null) {
             wlGlRender.setCodecType(type);
         }
     }
 
-
-    public void setFrameData(int w, int h, byte[] y, byte[] u, byte[] v)
-    {
-        if(wlGlRender != null)
-        {
+    public void setFrameData(int w, int h, byte[] y, byte[] u, byte[] v) {
+        if (wlGlRender != null) {
             wlGlRender.setFrameData(w, h, y, u, v);
             requestRender();
         }
     }
 
-    public void cutVideoImg()
-    {
-        if(wlGlRender != null)
-        {
+    public void cutVideoImg() {
+        if (wlGlRender != null) {
             wlGlRender.cutVideoImg();
             requestRender();
         }

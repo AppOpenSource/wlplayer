@@ -5,7 +5,6 @@
 #ifndef WLPLAYER_WLAUDIOCHANNEL_H
 #define WLPLAYER_WLAUDIOCHANNEL_H
 
-
 extern "C"
 {
 #include <libavutil/rational.h>
@@ -19,8 +18,8 @@ public:
 
 public:
     WlAudioChannel(int id, AVRational base);
+
     WlAudioChannel(int id, AVRational base, int fps);
 };
-
 
 #endif //WLPLAYER_WLAUDIOCHANNEL_H

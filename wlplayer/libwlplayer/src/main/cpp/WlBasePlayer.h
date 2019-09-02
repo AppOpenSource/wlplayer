@@ -22,8 +22,8 @@ public:
 
 public:
     WlBasePlayer();
+
     ~WlBasePlayer();
 };
-
 
 #endif //WLPLAYER_WLBASEPLAYER_H

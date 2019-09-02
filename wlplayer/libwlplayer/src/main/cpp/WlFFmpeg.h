@@ -79,5 +79,4 @@ public:
     int getVideoHeight();
 };
 
-
 #endif //WLPLAYER_WLFFMPEG_H

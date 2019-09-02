@@ -44,5 +44,4 @@ public:
     int noticeThread();
 };
 
-
 #endif //WLPLAYER_QUEUE_H

@@ -13,7 +13,7 @@ WlJavaCall::WlJavaCall(_JavaVM *vm, JNIEnv *env, jobject *obj) {
     jobj = env->NewGlobalRef(jobj);
     jclass jlz = jniEnv->GetObjectClass(jobj);
     if (!jlz) {
-//        LOGE("find jclass faild");
+        LOGE("find jclass faild");
         return;
     }
     jmid_error = jniEnv->GetMethodID(jlz, "onError", "(ILjava/lang/String;)V");
@@ -35,7 +35,7 @@ void WlJavaCall::onError(int type, int code, const char *msg) {
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
         jstring jmsg = jniEnv->NewStringUTF(msg);
@@ -62,7 +62,7 @@ void WlJavaCall::onLoad(int type, bool load) {
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
         jniEnv->CallVoidMethod(jobj, jmid_load, load);
@@ -76,7 +76,7 @@ void WlJavaCall::onParpared(int type) {
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
         jniEnv->CallVoidMethod(jobj, jmid_parpared);
@@ -123,7 +123,7 @@ void WlJavaCall::onDecMediacodec(int type, int size, uint8_t *packet_data, int p
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
         jbyteArray data = jniEnv->NewByteArray(size);
@@ -144,7 +144,7 @@ WlJavaCall::onGlRenderYuv(int type, int width, int height, uint8_t *fy, uint8_t 
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
 
@@ -184,7 +184,7 @@ void WlJavaCall::onVideoInfo(int type, int currt_secd, int total_secd) {
     if (type == WL_THREAD_CHILD) {
         JNIEnv *jniEnv;
         if (javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK) {
-//            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
+            LOGE("%s: AttachCurrentThread() failed", __FUNCTION__);
             return;
         }
         jniEnv->CallVoidMethod(jobj, jmid_info, currt_secd, total_secd);

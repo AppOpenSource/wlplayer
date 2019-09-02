@@ -26,24 +26,23 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by hlwky001 on 2017/12/15.
  */
-
-public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
+public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
 
     private Context context;
     private FloatBuffer vertexBuffer;
     private final float[] vertexData = {
-            1f,1f,0f,
-            -1f,1f,0f,
-            1f,-1f,0f,
-            -1f,-1f,0f
+            1f, 1f, 0f,
+            -1f, 1f, 0f,
+            1f, -1f, 0f,
+            -1f, -1f, 0f
     };
 
     private FloatBuffer textureBuffer;
     private final float[] textureVertexData = {
-            1f,0f,
-            0f,0f,
-            1f,1f,
-            0f,1f
+            1f, 0f,
+            0f, 0f,
+            1f, 1f,
+            0f, 1f
     };
 
     /**
@@ -68,7 +67,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private int sampler_y;
     private int sampler_u;
     private int sampler_v;
-    private int [] textureid_yuv;
+    private int[] textureid_yuv;
 
     int w;
     int h;
@@ -84,13 +83,10 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private int aPositionHandle_stop;
     private int aTextureCoordHandle_stop;
 
-
     int codecType = -1;
     private boolean cutimg = false;
     private int sWidth = 0;
     private int sHeight = 0;
-
-
 
     private WlOnGlSurfaceViewOnCreateListener wlOnGlSurfaceViewOncreateListener;
     private WlOnRenderRefreshListener wlOnRenderRefreshListener;
@@ -112,14 +108,12 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
 
     }
 
-    public void setFrameData(int w, int h, byte[] by, byte[] bu, byte[] bv)
-    {
+    public void setFrameData(int w, int h, byte[] by, byte[] bu, byte[] bv) {
         this.w = w;
         this.h = h;
         this.y = ByteBuffer.wrap(by);
         this.u = ByteBuffer.wrap(bu);
         this.v = ByteBuffer.wrap(bv);
-
     }
 
     public void setCodecType(int codecType) {
@@ -139,7 +133,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         MyLog.d("onSurfaceChanged, width:" + width + ",height :" + height);
         sWidth = width;
         sHeight = height;
-        GLES20.glViewport(0,0,width, height);
+        GLES20.glViewport(0, 0, width, height);
     }
 
 
@@ -147,27 +141,20 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glClearColor(0f, 0f, 0f, 1f);
-        if(codecType == 1)
-        {
+        if (codecType == 1) {
             renderMediacodec();
             MyLog.d("mediaocdec.......");
-        }
-        else if(codecType == 0)
-        {
+        } else if (codecType == 0) {
             renderYuv();
             MyLog.d("yuv.......");
-        }
-        else
-        {
+        } else {
             renderStop();
         }
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
-        if(cutimg)
-        {
+        if (cutimg) {
             cutimg = false;
             Bitmap bitmap = cutBitmap(0, 0, sWidth, sHeight);
-            if(wlOnGlSurfaceViewOncreateListener != null)
-            {
+            if (wlOnGlSurfaceViewOncreateListener != null) {
                 wlOnGlSurfaceViewOncreateListener.onCutVideoImg(bitmap);
             }
         }
@@ -177,8 +164,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         MyLog.d("updateSurface");
-        if(wlOnRenderRefreshListener != null)
-        {
+        if (wlOnRenderRefreshListener != null) {
             wlOnRenderRefreshListener.onRefresh();
         }
     }
@@ -194,14 +180,13 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     /**
      * 初始化硬件解码shader
      */
-    private void initMediacodecShader()
-    {
+    private void initMediacodecShader() {
         String vertexShader = WlShaderUtils.readRawTextFile(context, R.raw.vertex_base);
         String fragmentShader = WlShaderUtils.readRawTextFile(context, R.raw.fragment_mediacodec);
         programId_mediacodec = WlShaderUtils.createProgram(vertexShader, fragmentShader);
-        aPositionHandle_mediacodec= GLES20.glGetAttribLocation(programId_mediacodec,"av_Position");
-        aTextureCoordHandle_mediacodec =GLES20.glGetAttribLocation(programId_mediacodec,"af_Position");
-        uTextureSamplerHandle_mediacodec =GLES20.glGetUniformLocation(programId_mediacodec,"sTexture");
+        aPositionHandle_mediacodec = GLES20.glGetAttribLocation(programId_mediacodec, "av_Position");
+        aTextureCoordHandle_mediacodec = GLES20.glGetAttribLocation(programId_mediacodec, "af_Position");
+        uTextureSamplerHandle_mediacodec = GLES20.glGetUniformLocation(programId_mediacodec, "sTexture");
 
         int[] textures = new int[1];
         GLES20.glGenTextures(1, textures, 0);
@@ -217,8 +202,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         surfaceTexture = new SurfaceTexture(textureid_mediacodec);
         surfaceTexture.setOnFrameAvailableListener(this);
         surface = new Surface(surfaceTexture);
-        if(wlOnGlSurfaceViewOncreateListener != null)
-        {
+        if (wlOnGlSurfaceViewOncreateListener != null) {
             wlOnGlSurfaceViewOncreateListener.onGlSurfaceViewOnCreate(surface);
         }
     }
@@ -226,8 +210,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     /**
      * 使用硬件解码shader
      */
-    private void renderMediacodec()
-    {
+    private void renderMediacodec() {
         GLES20.glUseProgram(programId_mediacodec);
         surfaceTexture.updateTexImage();
         vertexBuffer.position(0);
@@ -236,20 +219,19 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
                 12, vertexBuffer);
         textureBuffer.position(0);
         GLES20.glEnableVertexAttribArray(aTextureCoordHandle_mediacodec);
-        GLES20.glVertexAttribPointer(aTextureCoordHandle_mediacodec,2,GLES20.GL_FLOAT,false,8, textureBuffer);
+        GLES20.glVertexAttribPointer(aTextureCoordHandle_mediacodec, 2, GLES20.GL_FLOAT, false, 8, textureBuffer);
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureid_mediacodec);
-        GLES20.glUniform1i(uTextureSamplerHandle_mediacodec,0);
+        GLES20.glUniform1i(uTextureSamplerHandle_mediacodec, 0);
     }
 
-    private void initYuvShader()
-    {
+    private void initYuvShader() {
         String vertexShader = WlShaderUtils.readRawTextFile(context, R.raw.vertex_base);
         String fragmentShader = WlShaderUtils.readRawTextFile(context, R.raw.fragment_yuv);
         programId_yuv = WlShaderUtils.createProgram(vertexShader, fragmentShader);
-        aPositionHandle_yuv= GLES20.glGetAttribLocation(programId_yuv,"av_Position");
-        aTextureCoordHandle_yuv =GLES20.glGetAttribLocation(programId_yuv,"af_Position");
+        aPositionHandle_yuv = GLES20.glGetAttribLocation(programId_yuv, "av_Position");
+        aTextureCoordHandle_yuv = GLES20.glGetAttribLocation(programId_yuv, "af_Position");
 
         sampler_y = GLES20.glGetUniformLocation(programId_yuv, "sampler_y");
         sampler_u = GLES20.glGetUniformLocation(programId_yuv, "sampler_u");
@@ -270,17 +252,15 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         }
     }
 
-    private void renderYuv()
-    {
-        if(w > 0 && h > 0 && y != null && u != null && v != null)
-        {
+    private void renderYuv() {
+        if (w > 0 && h > 0 && y != null && u != null && v != null) {
             GLES20.glUseProgram(programId_yuv);
             GLES20.glEnableVertexAttribArray(aPositionHandle_yuv);
             GLES20.glVertexAttribPointer(aPositionHandle_yuv, 3, GLES20.GL_FLOAT, false,
                     12, vertexBuffer);
             textureBuffer.position(0);
             GLES20.glEnableVertexAttribArray(aTextureCoordHandle_yuv);
-            GLES20.glVertexAttribPointer(aTextureCoordHandle_yuv,2,GLES20.GL_FLOAT,false,8, textureBuffer);
+            GLES20.glVertexAttribPointer(aTextureCoordHandle_yuv, 2, GLES20.GL_FLOAT, false, 8, textureBuffer);
 
             MyLog.d("renderFFmcodec");
             //使 GL_TEXTURE0 单元 活跃 opengl最多支持16个纹理
@@ -314,17 +294,15 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         }
     }
 
-    private void initStop()
-    {
+    private void initStop() {
         String vertexShader = WlShaderUtils.readRawTextFile(context, R.raw.vertex_base);
         String fragmentShader = WlShaderUtils.readRawTextFile(context, R.raw.fragment_no);
         programId_stop = WlShaderUtils.createProgram(vertexShader, fragmentShader);
-        aPositionHandle_stop= GLES20.glGetAttribLocation(programId_stop,"av_Position");
-        aTextureCoordHandle_stop =GLES20.glGetAttribLocation(programId_stop,"af_Position");
+        aPositionHandle_stop = GLES20.glGetAttribLocation(programId_stop, "av_Position");
+        aTextureCoordHandle_stop = GLES20.glGetAttribLocation(programId_stop, "af_Position");
     }
 
-    private void renderStop()
-    {
+    private void renderStop() {
         GLES20.glUseProgram(programId_stop);
         vertexBuffer.position(0);
         GLES20.glEnableVertexAttribArray(aPositionHandle_stop);
@@ -332,7 +310,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
                 12, vertexBuffer);
         textureBuffer.position(0);
         GLES20.glEnableVertexAttribArray(aTextureCoordHandle_stop);
-        GLES20.glVertexAttribPointer(aTextureCoordHandle_stop,2,GLES20.GL_FLOAT,false,8, textureBuffer);
+        GLES20.glVertexAttribPointer(aTextureCoordHandle_stop, 2, GLES20.GL_FLOAT, false, 8, textureBuffer);
     }
 
     private Bitmap cutBitmap(int x, int y, int w, int h) {
@@ -363,8 +341,7 @@ public class WlGlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         return bitmap;
     }
 
-    public void cutVideoImg()
-    {
+    public void cutVideoImg() {
         cutimg = true;
     }
 

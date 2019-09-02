@@ -3,6 +3,8 @@ package com.ywl5320.wlplayer;
 import android.graphics.Bitmap;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
@@ -24,6 +26,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by ywl on 2017-12-13.
  */
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class WlPlayer {
 
     static {

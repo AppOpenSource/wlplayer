@@ -1,6 +1,7 @@
 //
 // Created by ywl on 2017-12-3.
 //
+
 #pragma once
 #ifndef WLPLAYER_WLAUDIO_H
 #define WLPLAYER_WLAUDIO_H
@@ -88,6 +89,5 @@ public:
     void setClock(int secds);
 
 };
-
 
 #endif //WLPLAYER_WLAUDIO_H

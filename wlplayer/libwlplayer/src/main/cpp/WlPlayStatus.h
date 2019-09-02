@@ -5,7 +5,6 @@
 #ifndef WLPLAYER_WLPLAYSTATUS_H
 #define WLPLAYER_WLPLAYSTATUS_H
 
-
 class WlPlayStatus {
 
 public:
@@ -16,9 +15,8 @@ public:
 
 public:
     WlPlayStatus();
+
     ~WlPlayStatus();
-
 };
-
 
 #endif //WLPLAYER_WLPLAYSTATUS_H

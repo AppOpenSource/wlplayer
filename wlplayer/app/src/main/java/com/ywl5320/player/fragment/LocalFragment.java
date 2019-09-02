@@ -102,8 +102,7 @@ public class LocalFragment extends BaseFragment {
         File[] files = file.listFiles();
         for (int i = 0; i < files.length; i++) {
             //if(files[i].getName().toLowerCase().contains("sdcard"))
-            if(files[i].getName().toLowerCase().contains("jooan"))
-            {
+            if (files[i].getName().toLowerCase().contains("jooan")) {
                 VideoListBean videoListBean = new VideoListBean();
                 videoListBean.setParent(file.getAbsolutePath());
                 videoListBean.setName(files[i].getName());

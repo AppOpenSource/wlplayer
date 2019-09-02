@@ -110,7 +110,6 @@ int WlFFmpeg::decodeFFmpeg() {
         }
     }
 
-
     if (audiochannels.size() > 0) {
         wlAudio = new WlAudio(wlPlayStatus, wlJavaCall);
         setAudioChannel(0);
@@ -123,6 +122,7 @@ int WlFFmpeg::decodeFFmpeg() {
             }
         }
     }
+
     if (videochannels.size() > 0) {
         wlVideo = new WlVideo(wlJavaCall, wlAudio, wlPlayStatus);
         setVideoChannel(0);

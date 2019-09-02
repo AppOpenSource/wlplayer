@@ -5,7 +5,6 @@
 #ifndef WLPLAYER_WLVIDEO_H
 #define WLPLAYER_WLVIDEO_H
 
-
 #include "WlBasePlayer.h"
 #include "WlQueue.h"
 #include "WlJavaCall.h"
@@ -14,10 +13,10 @@
 
 extern "C"
 {
-    #include <libavutil/time.h>
+#include <libavutil/time.h>
 };
 
-class WlVideo : public WlBasePlayer{
+class WlVideo : public WlBasePlayer {
 
 public:
     WlQueue *queue = NULL;
@@ -39,11 +38,15 @@ public:
 
 public:
     WlVideo(WlJavaCall *javaCall, WlAudio *audio, WlPlayStatus *playStatus);
+
     ~WlVideo();
 
     void playVideo(int codecType);
-    void decodVideo();
+
+    void decodeVideo();
+
     void release();
+
     double synchronize(AVFrame *srcFrame, double pts);
 
     double getDelayTime(double diff);
@@ -51,6 +54,5 @@ public:
     void setClock(int secds);
 
 };
-
 
 #endif //WLPLAYER_WLVIDEO_H

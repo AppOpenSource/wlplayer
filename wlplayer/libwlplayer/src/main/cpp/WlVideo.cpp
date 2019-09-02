@@ -60,9 +60,8 @@ void WlVideo::release() {
 
 void *decodVideoT(void *data) {
     WlVideo *wlVideo = (WlVideo *) data;
-    wlVideo->decodVideo();
+    wlVideo->decodeVideo();
     pthread_exit(&wlVideo->videoThread);
-
 }
 
 void *codecFrame(void *data) {
@@ -126,17 +125,15 @@ void *codecFrame(void *data) {
     pthread_exit(&wlVideo->decFrame);
 }
 
-
 void WlVideo::playVideo(int type) {
     codecType = type;
     if (codecType == 0) {
         pthread_create(&decFrame, NULL, codecFrame, this);
     }
     pthread_create(&videoThread, NULL, decodVideoT, this);
-
 }
 
-void WlVideo::decodVideo() {
+void WlVideo::decodeVideo() {
     while (!wlPlayStatus->exit) {
         isExit = false;
         if (wlPlayStatus->pause)//暂停
@@ -283,7 +280,6 @@ void WlVideo::decodVideo() {
         }
     }
     isExit = true;
-
 }
 
 WlVideo::~WlVideo() {
@@ -322,7 +318,6 @@ double WlVideo::getDelayTime(double diff) {
         } else if (delayTime > rate * 2) {
             delayTime = rate * 2;
         }
-
     } else if (diff < -0.003) {
         delayTime = delayTime * 3 / 2;
         if (delayTime < rate / 2) {
