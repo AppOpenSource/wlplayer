@@ -171,7 +171,7 @@ void WlVideo::decodeVideo() {
 
             if (LOG_SHOW) {
                 LOGE("video clock is %f", time);
-                LOGE("audio clock is %f", wlAudio->clock);
+                //LOGE("audio clock is %f", wlAudio->clock);
             }
             if (time < 0) {
                 time = packet->dts * av_q2d(time_base);

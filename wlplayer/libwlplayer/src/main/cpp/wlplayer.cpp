@@ -129,8 +129,9 @@ int main1() {
             }
             LOGD("Number:%4d\n", pCodecParserCtx->output_picture_number);
 
-            wlJavaCall->onDecMediacodec(WL_THREAD_MAIN, packet.size, packet.data, 0);
+            wlJavaCall->onDecMediacodec(WL_THREAD_CHILD, packet.size, packet.data, 0);
 
+            av_usleep(1000 * 55);
 #if 0
             ret = avcodec_decode_video2(pCodecCtx, pFrame, &got_picture, &packet);
             if (ret < 0) {
@@ -205,7 +206,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_ywl5320_wlplayer_WlPlayer_testH264(JNIEnv *env, jobject instance) {
 
-    main1();
+
 
 }
 
@@ -244,7 +245,8 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_ywl5320_wlplayer_WlPlayer_wlStart(JNIEnv *env, jobject instance) {
     if (wlFFmpeg != NULL) {
-        wlFFmpeg->start();
+        //wlFFmpeg->start();
+        main1();
     }
 }
 

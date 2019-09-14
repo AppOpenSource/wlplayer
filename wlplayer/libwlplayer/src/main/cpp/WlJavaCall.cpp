@@ -130,7 +130,7 @@ void WlJavaCall::onDecMediacodec(int type, int size, uint8_t *packet_data, int p
         jniEnv->SetByteArrayRegion(data, 0, size, (jbyte *) packet_data);
         jniEnv->CallVoidMethod(jobj, jmid_dec_mediacodec, data, size, pts);
         jniEnv->DeleteLocalRef(data);
-        javaVM->DetachCurrentThread();
+        //javaVM->DetachCurrentThread();
     } else {
         jbyteArray data = jniEnv->NewByteArray(size);
         jniEnv->SetByteArrayRegion(data, 0, size, (jbyte *) data);

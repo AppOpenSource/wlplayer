@@ -262,7 +262,6 @@ public class WlPlayer {
             wlPrepared(dataSource, isOnlyMusic);
         } else {
             if (surface != null) {
-                //testH264(dataSource, isOnlyMusic);
                 wlPrepared(dataSource, isOnlyMusic);
             }
         }
