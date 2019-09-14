@@ -53,6 +53,8 @@ public class VideoLiveActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         initViews();
         initPlayer();
+
+        wlPlayer.testH264();
     }
 
     private void initPlayer() {

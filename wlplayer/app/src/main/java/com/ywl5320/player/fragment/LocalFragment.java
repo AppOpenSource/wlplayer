@@ -88,6 +88,10 @@ public class LocalFragment extends BaseFragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("url", videoListBean.getPath());
                         VideoLiveActivity.startActivity(getActivity(), VideoLiveActivity.class, bundle);
+
+                        /*Intent intent = new Intent(getActivity(), ParseH264FileActivity.class);
+                        getActivity().startActivity(intent);
+                        ((getActivity())).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);*/
                     }
                 }
             }
