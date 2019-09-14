@@ -153,6 +153,8 @@ public class WlPlayer {
     }
 
 
+    public native void testH264();
+
     /**
      * 准备
      */
@@ -260,6 +262,7 @@ public class WlPlayer {
             wlPrepared(dataSource, isOnlyMusic);
         } else {
             if (surface != null) {
+                //testH264(dataSource, isOnlyMusic);
                 wlPrepared(dataSource, isOnlyMusic);
             }
         }

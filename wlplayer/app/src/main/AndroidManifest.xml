@@ -31,7 +31,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.ShowImgActivity"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".activity.ParseH264FileActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

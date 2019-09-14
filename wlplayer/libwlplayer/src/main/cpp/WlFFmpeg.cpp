@@ -46,6 +46,7 @@ int WlFFmpeg::decodeFFmpeg() {
     av_register_all();
     avformat_network_init();
     pFormatCtx = avformat_alloc_context();
+
     if (avformat_open_input(&pFormatCtx, urlpath, NULL, NULL) != 0) {
         if (LOG_SHOW) {
             LOGE("can not open url:%s", urlpath);
