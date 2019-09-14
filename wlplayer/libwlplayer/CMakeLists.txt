@@ -17,6 +17,8 @@ add_library(
              src/main/cpp/WlQueue.cpp
              src/main/cpp/WlPlayStatus.cpp
              src/main/cpp/WlAudioChannel.cpp
+             src/main/cpp/Fut_App_P2P_Demo.cpp
+             src/main/cpp/main_app_ctrl.cpp
              )
 
 #添加libavcodec-57.so
@@ -78,7 +80,12 @@ set_target_properties( postproc-54
                        PROPERTIES IMPORTED_LOCATION
                        ${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libpostproc-54.so)
 
-
+add_library( Jooan-p2psdk
+        SHARED
+        IMPORTED)
+set_target_properties( Jooan-p2psdk
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libJooan_p2psdk.a)
 
 target_link_libraries( # Specifies the target library.
                        wlplayer
@@ -90,6 +97,7 @@ target_link_libraries( # Specifies the target library.
                        swresample-2
                        swscale-4
                        postproc-54
+                       Jooan-p2psdk
                        OpenSLES
                        android
                        log

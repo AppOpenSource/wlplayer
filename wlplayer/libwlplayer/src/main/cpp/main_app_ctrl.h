@@ -1,0 +1,6 @@
+
+///////////////////////////////////////////////////////////
+
+int Fut_App_ConnectDvs(int m_p2p_proxy_port,int m_p2p_session_id);
+
+
