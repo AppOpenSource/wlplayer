@@ -13,7 +13,7 @@ android {
                 //abiFilters 'armeabi', 'x86'
                 abiFilters 'armeabi'
             }
-        }w
+        }
 
         sourceSets {
             main {

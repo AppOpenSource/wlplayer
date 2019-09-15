@@ -390,6 +390,7 @@ public class WlPlayer {
     }
 
     public void mediacodecDecode(byte[] bytes, int size, int pts) {
+        onLoad(false);
         if (bytes != null && mediaCodec != null && info != null) {
             try {
                 int inputBufferIndex = mediaCodec.dequeueInputBuffer(10);
